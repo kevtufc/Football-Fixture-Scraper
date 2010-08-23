@@ -17,12 +17,15 @@ month = nil
   if row.attributes['class'] == "rowHeader"
     month = Date::MONTHNAMES.index(month = (row/"td").inner_html)
   else
-    day  = (row/"td[1]").inner_html.match("[1234567890]+")[0].to_i
-    time = (row/"td[2]").inner_html.gsub(/:/,"")
+    day        = (row/"td[1]").inner_html.match("[1234567890]+")[0].to_i
+    time       = (row/"td[2]").inner_html.gsub(/:/,"")
+    opponents  = (row/'td[4]/a').inner_html
+    home_away  = (row/'td[3]').inner_html
+    comp       = (row/'td[5]').inner_html.split.first
     puts "BEGIN:VEVENT"
     puts "DTSTART:201#{month > 6 ? "0" : "1"}#{"%02d" % month}#{"%02d" % day}T#{time}00Z"
     puts "DTEND:201#{month > 6 ? "0" : "1"}#{"%02d" % month}#{"%02d" % day}T#{time.to_i+200}00Z"
-    puts "SUMMARY:#{(row/'td[4]/a').inner_html} #{(row/'td[3]').inner_html} (#{(row/'td[5]').inner_html.split.first})"
+    puts "SUMMARY:#{opponents} #{home_away} (#{comp})"
     puts "END:VEVENT" 
   end
 end
