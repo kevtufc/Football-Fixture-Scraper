@@ -2,12 +2,19 @@ require 'rubygems'
 require 'hpricot'
 require 'open-uri'
 require 'optparse'
-require 'webrick'
-include WEBrick
+require 'rack'
+require 'date'
 
-# Change this to the url of the fixtures page you're after,
-# run the server and point your calendar import at it.
-url = ("http://www.torquayunited.com/page/Fixtures/0,,10445,00.html"
+class FixtureServlet
+
+  URL = "http://www.torquayunited.com/page/Fixtures/0,,10445,00.html"
+  
+  def call(env)
+    f=FixtureList.new(URL)
+    f.parse
+    return [400, {"Content-Type" => "text/html"}, f.to_vcalendar]
+  end
+end
 
 class Fixture
   attr_accessor :start,:home, :away, :hscore, :ascore, :comp
@@ -78,19 +85,3 @@ class FixtureList
 
 end
 
-
-class FixtureServlet < HTTPServlet::AbstractServlet
-  def do_GET(req,resp)
-    f=FixtureList.new(url)
-    f.parse
-    resp.body=f.to_vcalendar
-    raise HTTPStatus::OK
-  end
-end
-
-server = HTTPServer.new(:Port => 8001)
-server.mount "/", FixtureServlet
-['INT', 'TERM'].each {|signal| 
-    trap(signal) {server.shutdown}
-}
-server.start
