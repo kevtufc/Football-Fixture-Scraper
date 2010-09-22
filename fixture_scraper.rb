@@ -19,8 +19,8 @@ class Fixture
   attr_accessor :start,:home, :away, :hscore, :ascore, :comp
   def to_vcalendar
     out  = "BEGIN:VEVENT\n"
-    out += "DTSTART:#{start}\n"
-    out += "DTEND:#{start + 7200}\n"
+    out += "DTSTART:#{start.strftime('%Y%m%dT%H%M00Z')}\n"
+    out += "DTEND:#{(start + 7200).strftime('%Y%m%dT%H%M00Z')}\n"
     out += "SUMMARY:#{home}"
     out += " " + hscore.to_s if hscore
     out += " v "
@@ -74,6 +74,7 @@ class FixtureList
   def to_vcalendar
     out = "BEGIN:VCALENDAR\n"
     out += "VERSION:2.0\n"
+    out += "X-WR-CALNAME:Torquay United Fixtures\n"
     out += @fixtures.map{|f| f.to_vcalendar}.join
     out += "END:VCALENDAR\n"
   end
