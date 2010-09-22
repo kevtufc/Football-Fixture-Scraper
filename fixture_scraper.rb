@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'hpricot'
 require 'open-uri'
-require 'optparse'
 require 'rack'
 require 'date'
 
@@ -12,7 +11,7 @@ class FixtureServlet
   def call(env)
     f=FixtureList.new(URL)
     f.parse
-    return [400, {"Content-Type" => "text/html"}, f.to_vcalendar]
+    return [400, {"Content-Type" => "text/plain"}, f.to_vcalendar]
   end
 end
 
