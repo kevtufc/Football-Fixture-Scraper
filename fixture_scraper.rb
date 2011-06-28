@@ -51,7 +51,7 @@ class FixtureList
         day             = (row/"td[1]").inner_html.match("[1234567890]+")[0].to_i
         (hour,
 	 min)           = (row/"td[2]").inner_html.split(/:/)
-        game.start      = Time.utc(month > 6 ? 2010 : 2011,month,day,hour,min)
+        game.start      = Time.utc(month > 6 ? 2011 : 2012,month,day,hour,min)
         opponents       = (row/'td[4]/a').inner_html.strip
         game.comp       = (row/'td[5]').inner_html.split.first
         home            = (row/'td[3]').inner_html=="H"
